@@ -5,4 +5,26 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="buttonStyle">
+        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_width">250dp</item>
+        <item name="android:background">@color/colorGreen</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="editTextStyle">
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:background">#11000000</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="textViewStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">#F8F8FF</item>
+        <item name="android:layout_marginStart">29dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_alignParentStart">true</item>
+    </style>
 </resources>

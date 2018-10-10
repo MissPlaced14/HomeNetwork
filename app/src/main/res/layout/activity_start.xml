@@ -4,18 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="welcomeTextClicked"
+    android:orientation="vertical"
     tools:context="com.example.rajatkumar.homenetwork.StartActivity">
 
-    <TextView
-        android:id="@+id/welcomeText"
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:onClick="welcomeTextClicked"
-        android:text="Welcome from Team 4!"
-        android:textColor="@color/colorPrimary"
-        android:textSize="25sp" />
+        android:id="@+id/scrollView2">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/welcomeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome"
+                android:textSize="18sp"
+                android:layout_weight="1"
+                android:layout_marginTop="20sp"
+                android:layout_marginLeft="25sp"
+                android:layout_marginRight="25sp"
+                android:layout_above="@+id/buttonStart"
+                android:layout_marginBottom="14dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/buttonStart"
+        android:layout_width="match_parent"
+        android:layout_height="80sp"
+        android:layout_marginLeft="25sp"
+        android:layout_marginRight="24sp"
+        android:layout_marginBottom="20sp"
+        android:layout_alignParentBottom="true"
+        android:onClick="buttonStartClicked"
+        android:enabled="false"
+        android:text="Begin" />
+
+    <CheckBox
+        android:id="@+id/checkBoxTerms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/buttonStart"
+        android:layout_below="@+id/scrollView2"
+        android:layout_marginTop="21dp"
+        android:text="Agree to Terms and conditions"
+        />
+
 
 </RelativeLayout>

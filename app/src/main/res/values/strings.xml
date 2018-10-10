@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Home Network</string>
+    <string name="welcome"> This application is looking to the modernize wifi authenticatiopn while keeping the average
+     tect-illetrate user able to manage and understand their home internet. As it stands today, a single wifi password
+    is used to connect every device to the network. If an "intruder" were to obtain your password, the only way
+    to kick them off would be to change the wifi password and then re-enter said password on every device in the home.
+    Beyond this, it is difficult for the average user(WIFI ADMINISTRATOR) to know if there is any unwanted device on the network
+    due to the unfriendliness of the current interfaces. </string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="loginName">Login Name</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+    <string name="Signup">Sign Up</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_message">Are you sure you want to Logout?</string>
+    <string name="dialog_title">Logout</string>
+
 </resources>

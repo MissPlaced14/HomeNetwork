@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+>
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="89dp"
+        android:src="@drawable/telus_logo" />
+
+
+    <EditText
+        android:id="@+id/editTextUsername"
+        style="@style/editTextStyle"
+        android:layout_below="@+id/imageView3"
+        android:layout_marginTop="60dp"
+        android:hint="@string/loginName"
+        android:inputType="textEmailAddress"
+        android:drawableLeft="@drawable/ic_action_user"
+        android:singleLine="false" />
+
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        style="@style/editTextStyle"
+        android:layout_alignStart="@+id/editTextUsername"
+        android:layout_below="@+id/editTextUsername"
+        android:layout_marginTop="37dp"
+        android:drawableLeft="@drawable/ic_action_pass"
+        android:hint="@string/password"
+        android:inputType="textPassword" />
+
+
+    <Button
+        android:id="@+id/buttonLogin"
+        style="@style/buttonStyle"
+        android:layout_below="@+id/checkBoxRemember"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20sp"
+        android:text="@string/login" />
+
+    <Button
+        android:id="@+id/buttonSignup"
+        style="@style/buttonStyle"
+        android:layout_below="@+id/buttonLogin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12sp"
+        android:text="@string/Signup" />
+
+    <CheckBox
+        android:id="@+id/checkBoxRemember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/buttonLogin"
+        android:layout_below="@+id/editTextPassword"
+        android:layout_marginTop="15dp"
+        android:text="Remember me" />
+
+    <TextView
+        android:id="@+id/tvForgotPass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/checkBoxRemember"
+        android:layout_alignBottom="@+id/checkBoxRemember"
+        android:layout_marginStart="22dp"
+        android:layout_toEndOf="@+id/checkBoxRemember"
+        android:text="Forgot Password" />
+</RelativeLayout>

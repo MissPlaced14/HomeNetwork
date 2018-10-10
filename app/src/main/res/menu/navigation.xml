@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_networks"
+        android:icon="@drawable/networks"
+        android:title="network" />
+
+    <item
+        android:id="@+id/nav_devices"
+        android:icon="@drawable/devices"
+        android:title="Devices" />
+
+    <item
+        android:id="@+id/nav_users"
+        android:icon="@drawable/users"
+        android:title="Users" />
+
+    <item
+        android:id="@+id/nav_setting"
+        android:icon="@drawable/settings"
+        android:title="Settings" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/log_out"
+        android:title="Log Out" />
+
+</menu>
