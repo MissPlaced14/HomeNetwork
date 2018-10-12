@@ -1,6 +1,8 @@
 package com.example.rajatkumar.homenetwork;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     JSONParser parser = new JSONParser();
     JSONObject jsonObject = null;
 
+    FragmentManager fm;
+    FragmentTransaction ft;
     BottomNavigationView navigation;
 
     String data;
@@ -53,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        fm = getFragmentManager();
+        ft = fm.beginTransaction();
 
         navigation = (BottomNavigationView) findViewById(R.id.navigationMain);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -61,7 +66,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RouterQuery routerQuery = new RouterQuery();
+
+        networkFragment nf = new networkFragment();
+        ft.replace(R.id.mainFrame, nf);
+        ft.commit();
+
+   //     RouterQuery routerQuery = new RouterQuery();
         // routerQuery.execute(command1);
     }
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -70,10 +80,27 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.nav_networks:
+
+                    if(navigation.getSelectedItemId()!=R.id.nav_networks) {
+                        ft = fm.beginTransaction();
+                        networkFragment nf = new networkFragment();
+//                      mf.setArguments();
+                        ft.replace(R.id.mainFrame, nf);
+                        ft.commit();
+                    }
                     return true;
                 case R.id.nav_devices:
+                    ft = fm.beginTransaction();
+                    devicesFragment df = new devicesFragment();
+                    ft.replace(R.id.mainFrame, df);
+                    ft.commit();
+
                     return true;
                 case R.id.nav_users:
+                    ft = fm.beginTransaction();
+                    UsersFragment uf = new UsersFragment();
+                    ft.replace(R.id.mainFrame, uf);
+                    ft.commit();
                     return true;
                 case R.id.nav_setting:
                     return true;
@@ -130,79 +157,79 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public class RouterQuery extends AsyncTask<String, Integer, String> {
-
-        protected String doInBackground(String... args) {
-            try {
-
-                java.util.Properties config = new java.util.Properties();
-                config.put("StrictHostKeyChecking", "no");
-                JSch jsch = new JSch();
-                Session session=jsch.getSession(user, host,22);
-                session.setPassword(password);
-                session.setConfig(config);
-                session.connect();
-                System.out.println("Connected");
-
-                Channel channel=session.openChannel("exec");
-                ((ChannelExec)channel).setCommand(args[1]);
-                channel.setInputStream(null);
-                ((ChannelExec)channel).setErrStream(System.err);
-
-                InputStream in=channel.getInputStream();
-                channel.connect();
-                byte[] tmp=new byte[4096];
-                while(true){
-                    while(in.available()>0){
-                        int i=in.read(tmp, 0, 4096);
-                        if(i<0)break;
-                        String jsonString = new String(tmp, 0, i);
-                        System.out.print(jsonString);
-                        Object obj = parser.parse(jsonString);
-                        jsonObject = (JSONObject) obj;
-
-
-//	            String hostName = (String) jsonObject.get("hostname");
-//	            System.out.printf("SSID is %s", hostName+"\n");
-
-                    }
-                    if(channel.isClosed()){
-                        System.out.println("exit-status: "+channel.getExitStatus());
-                        break;
-                    }
-                    try{Thread.sleep(1000);}catch(Exception ee){}
-                }
-                channel.disconnect();
-                session.disconnect();
-                System.out.println("DONE");
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+//    public class RouterQuery extends AsyncTask<String, Integer, String> {
 //
-//            JSONObject radio1 = (JSONObject) jsonObject.get("clients");
-//         //   JSONArray interfaces = (JSONArray) radio1.get("interfaces");
-//            JSONObject interface0 = (JSONObject) radio1.get(0);
+//        protected String doInBackground(String... args) {
+//            try {
+//
+//                java.util.Properties config = new java.util.Properties();
+//                config.put("StrictHostKeyChecking", "no");
+//                JSch jsch = new JSch();
+//                Session session=jsch.getSession(user, host,22);
+//                session.setPassword(password);
+//                session.setConfig(config);
+//                session.connect();
+//                System.out.println("Connected");
+//
+//                Channel channel=session.openChannel("exec");
+//                ((ChannelExec)channel).setCommand(args[1]);
+//                channel.setInputStream(null);
+//                ((ChannelExec)channel).setErrStream(System.err);
+//
+//                InputStream in=channel.getInputStream();
+//                channel.connect();
+//                byte[] tmp=new byte[4096];
+//                while(true){
+//                    while(in.available()>0){
+//                        int i=in.read(tmp, 0, 4096);
+//                        if(i<0)break;
+//                        String jsonString = new String(tmp, 0, i);
+//                        System.out.print(jsonString);
+//                        Object obj = parser.parse(jsonString);
+//                        jsonObject = (JSONObject) obj;
+//
+//
+////	            String hostName = (String) jsonObject.get("hostname");
+////	            System.out.printf("SSID is %s", hostName+"\n");
+//
+//                    }
+//                    if(channel.isClosed()){
+//                        System.out.println("exit-status: "+channel.getExitStatus());
+//                        break;
+//                    }
+//                    try{Thread.sleep(1000);}catch(Exception ee){}
+//                }
+//                channel.disconnect();
+//                session.disconnect();
+//                System.out.println("DONE");
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+////
+////            JSONObject radio1 = (JSONObject) jsonObject.get("clients");
+////         //   JSONArray interfaces = (JSONArray) radio1.get("interfaces");
+////            JSONObject interface0 = (JSONObject) radio1.get(0);
+////            JSONObject config = (JSONObject) interface0.get("config");
+////            data = (String) config.get("ssid");
+////            Log.i("SSID", data);
+//
+//            JSONObject radio1 = (JSONObject) jsonObject.get("radio1");
+//            JSONArray interfaces = (JSONArray) radio1.get("interfaces");
+//            JSONObject interface0 = (JSONObject) interfaces.get(0);
 //            JSONObject config = (JSONObject) interface0.get("config");
 //            data = (String) config.get("ssid");
 //            Log.i("SSID", data);
-
-            JSONObject radio1 = (JSONObject) jsonObject.get("radio1");
-            JSONArray interfaces = (JSONArray) radio1.get("interfaces");
-            JSONObject interface0 = (JSONObject) interfaces.get(0);
-            JSONObject config = (JSONObject) interface0.get("config");
-            data = (String) config.get("ssid");
-            Log.i("SSID", data);
-            return "finished";
-        }
-        public void onProgressUpdate(Integer... data) {
-
-        }
-
-        public void onPostExecute(String result) {
-
-        }
-    }
+//            return "finished";
+//        }
+//        public void onProgressUpdate(Integer... data) {
+//
+//        }
+//
+//        public void onPostExecute(String result) {
+//
+//        }
+//    }
 
 }

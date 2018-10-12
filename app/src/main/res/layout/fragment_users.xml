@@ -1,0 +1,22 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/networkFrame"
+    tools:context="com.example.rajatkumar.homenetwork.networkFragment">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/listViewUsers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+
+
+    </RelativeLayout>
+
+</FrameLayout>

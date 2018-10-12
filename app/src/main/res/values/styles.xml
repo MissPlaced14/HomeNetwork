@@ -22,7 +22,6 @@
     <style name="textViewStyle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">#F8F8FF</item>
         <item name="android:layout_marginStart">29dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:layout_alignParentStart">true</item>
