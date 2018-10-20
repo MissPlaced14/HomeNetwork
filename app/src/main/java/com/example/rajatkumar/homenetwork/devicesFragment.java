@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,15 @@ public class devicesFragment extends Fragment {
         RouterQuery rq = new RouterQuery();
         addressAdaptor = new AddressAdaptor(getActivity().getApplicationContext());
         rq.execute(url);
+
+        SwipeRefreshLayout pullToRefresh = page.findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullToRefresh.setRefreshing(true);
+            }
+        });
+
         listViewDevices.setAdapter(addressAdaptor);
         return page;
     }
