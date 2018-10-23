@@ -4,6 +4,7 @@ package com.example.rajatkumar.homenetwork;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,19 @@ public class UsersFragment extends Fragment {
         gridViewUsers = (GridView)page2.findViewById(R.id.gridViewUsers);
 
         usersAdaptor = new UsersFragment.UsersAdaptor(getActivity().getApplicationContext());
+
+        SwipeRefreshLayout pullToRefresh = page2.findViewById(R.id.pullToRefreshUsers);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullToRefresh.setRefreshing(true);
+
+                if (pullToRefresh.isRefreshing()){
+                    pullToRefresh.setRefreshing(false);
+                }
+            }
+        });
+
 
         gridViewUsers.setAdapter(usersAdaptor);
         return page2;

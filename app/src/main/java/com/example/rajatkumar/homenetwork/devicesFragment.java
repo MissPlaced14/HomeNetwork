@@ -53,7 +53,7 @@ public class devicesFragment extends Fragment {
         addressAdaptor = new AddressAdaptor(getActivity().getApplicationContext());
         rq.execute(url);
 
-        SwipeRefreshLayout pullToRefresh = page.findViewById(R.id.pullToRefresh);
+        SwipeRefreshLayout pullToRefresh = page.findViewById(R.id.pullToRefreshDevices);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
