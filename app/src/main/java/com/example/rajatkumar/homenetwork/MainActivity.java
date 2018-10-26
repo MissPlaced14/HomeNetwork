@@ -103,6 +103,10 @@ public class MainActivity extends AppCompatActivity {
                     ft.commit();
                     return true;
                 case R.id.nav_setting:
+                    ft = fm.beginTransaction();
+                    SettingsFragment sf = new SettingsFragment();
+                    ft.replace(R.id.mainFrame, sf);
+                    ft.commit();
                     return true;
                 case R.id.nav_logout:
 
@@ -149,8 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.action_about:
-                Toast toast = Toast.makeText(this, "Version 1.0 by Team 4", Toast.LENGTH_SHORT);
-                toast.show();
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
         }
 

@@ -139,7 +139,7 @@ public class devicesFragment extends Fragment {
 
 
         public String getUbusKey(){
-            String[] command = {"curl", "-d", "{ 'jsonrpc': '2.0', 'id': 1, 'method': 'call', 'params': [ '00000000000000000000000000000000', 'session', 'login', { 'username': 'root', 'password': 'password'  } ] }",  url};
+            String[] command = {"curl", "-d", "{ 'jsonrpc': '2.0', 'id': 1, 'method': 'call', 'params': [ '00000000000000000000000000000000', 'session', 'login', { 'username': 'root', 'password': 'algonquin'  } ] }",  url};
             ProcessBuilder process = new ProcessBuilder(command);
             Process p;
             try

@@ -6,6 +6,10 @@
     to kick them off would be to change the wifi password and then re-enter said password on every device in the home.
     Beyond this, it is difficult for the average user(WIFI ADMINISTRATOR) to know if there is any unwanted device on the network
     due to the unfriendliness of the current interfaces. </string>
+
+    <string name="terms_conditions">Service terms apply to the use of the application. By checking the box below, you accept that the TELUS
+    Internet Service Terms and the TELUS Privacy Commitment will apply to your use of the application.
+    </string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>

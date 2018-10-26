@@ -19,6 +19,8 @@ public class StartActivity extends Activity {
     private boolean agreed;
     SharedPreferences sharedPreferences;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
