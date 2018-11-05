@@ -34,7 +34,6 @@ public class UsersFragment extends Fragment {
         listUsers.add("Urvesh");
         listUsers.add("Ankit");
         listUsers.add("Rajat");
-        listUsers.add("someone");
         page2 = inflater.inflate(R.layout.fragment_users, container, false);
         gridViewUsers = (GridView)page2.findViewById(R.id.gridViewUsers);
 

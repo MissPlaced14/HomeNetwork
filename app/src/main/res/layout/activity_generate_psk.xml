@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".generatePSK">
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="89dp"
+        android:src="@drawable/telus_logo" />
+
+
+    <EditText
+        android:id="@+id/editTextPSK"
+        android:layout_width="159dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="184dp"
+        android:ems="10"
+        android:hint="Password to be added"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/buttonGeneratePSK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextPSK"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="46dp"
+        android:layout_marginEnd="20dp"
+        android:onClick="generatePSKClicked"
+        android:text="Generate Password" />
+
+    <Button
+        android:id="@+id/buttonSavePSK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonGeneratePSK"
+        android:layout_alignStart="@+id/buttonGeneratePSK"
+        android:layout_marginStart="204dp"
+        android:layout_marginTop="153dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="20dp"
+        android:onClick="savePSKClicked"
+        android:text="Save Password" />
+
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/buttonSavePSK"
+        android:layout_marginStart="20dp"
+        android:text="Cancel" />
+
+</RelativeLayout>

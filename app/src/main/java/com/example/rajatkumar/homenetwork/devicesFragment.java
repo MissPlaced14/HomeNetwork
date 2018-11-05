@@ -40,6 +40,11 @@ public class devicesFragment extends Fragment {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        listDevices = new ArrayList<>();
+        listDevices.add("c8-ff-28-f1-81-fb");
+        listDevices.add("74-df-bf-8e-34-39");
+        listDevices.add("d1-bb-3e-22-a6-44");
+
 
     }
 
@@ -49,17 +54,23 @@ public class devicesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         page = inflater.inflate(R.layout.fragment_devices, container, false);
         listViewDevices = (ListView)page.findViewById(R.id.listViewDevices);
-        RouterQuery rq = new RouterQuery();
+//        RouterQuery rq = new RouterQuery();
+  //      rq.execute(url);
         addressAdaptor = new AddressAdaptor(getActivity().getApplicationContext());
-        rq.execute(url);
-
         SwipeRefreshLayout pullToRefresh = page.findViewById(R.id.pullToRefreshDevices);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                pullToRefresh.setRefreshing(true);
-            }
-        });
+                                               @Override
+                                               public void onRefresh() {
+
+                                                   pullToRefresh.setRefreshing(true);
+                                                   if (pullToRefresh.isRefreshing()){
+                                                       pullToRefresh.setRefreshing(false);
+                                                   }
+                                               }
+
+                                           }
+
+        );
 
         listViewDevices.setAdapter(addressAdaptor);
         return page;
@@ -104,13 +115,13 @@ public class devicesFragment extends Fragment {
                     builder.append(System.getProperty("line.separator"));
                 }
                 String result = builder.toString();
-                    Log.i("result", result);
+                Log.i("result", result);
 
 
                 try {
                     obj = parser.parse(result);
                 } catch (ParseException e) {
-                        Log.i("Error","there was an error parsing the JSON file");
+                    Log.i("Error","there was an error parsing the JSON file");
                 }
                 jsonObject = (JSONObject) obj;
                 JSONArray resultJson = (JSONArray) jsonObject.get("result");
@@ -180,7 +191,7 @@ public class devicesFragment extends Fragment {
             }
             catch (IOException e)
             {   System.out.print("error");
-            Log.e("IOError","Error retrieving data");
+                Log.e("IOError","Error retrieving data");
                 e.printStackTrace();
             }
             return "";
