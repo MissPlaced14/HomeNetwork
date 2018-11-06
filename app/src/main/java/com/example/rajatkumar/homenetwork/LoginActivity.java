@@ -70,7 +70,7 @@ public class LoginActivity extends Activity {
             }
         });
 
-    }
+}
     @Override
     protected void onResume() {
         super.onResume();
@@ -95,13 +95,12 @@ public class LoginActivity extends Activity {
     protected void onStop() {
         super.onStop();
         Log.i(ACTIVITY_NAME, "in onStop(): ");
-
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.i(ACTIVITY_NAME, "in onDestroy(): ");
-
     }
 
 
