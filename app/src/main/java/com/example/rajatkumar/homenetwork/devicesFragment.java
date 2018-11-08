@@ -219,7 +219,7 @@ public class devicesFragment extends Fragment {
         }
         public View getView(int position, View convertView, ViewGroup parent){
             LayoutInflater inflater = getActivity().getLayoutInflater();
-            View result = inflater.inflate(R.layout.connected_devices, null);
+            View result = inflater.inflate(R.layout.connected_devices_row, null);
             TextView address = (TextView)result.findViewById(R.id.device_mac);
             address.setText(   getItem(position)  ); // get the string at position
             return result;
