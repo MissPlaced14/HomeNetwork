@@ -1,6 +1,7 @@
 package com.example.rajatkumar.homenetwork;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,11 @@ public class generatePSK extends Activity {
     //Creating a Random object to create random PSKs to be stored
     Random random;
     StringBuilder sb;
+
+    final String DB_URL= "jdbc:mysql://192.168.1.240:3306/radius";
+    final String USER = "user";
+    final String PASS = "P@$$w0rd";
+    String value="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,5 +58,19 @@ public class generatePSK extends Activity {
             Toast toast = Toast.makeText(this, "Password shoud be at least 8 digits/alphabets long", Toast.LENGTH_LONG);
             toast.show();
         }
+    }
+
+    public class RouterQuery extends AsyncTask<String, Integer, String> {
+
+
+        protected String doInBackground(String... args) {
+
+            return value;
+        }
+
+        public void onPostExecute(String result) {
+
+        }
+
     }
 }
