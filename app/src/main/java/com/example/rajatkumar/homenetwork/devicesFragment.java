@@ -3,6 +3,7 @@ package com.example.rajatkumar.homenetwork;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,6 +39,7 @@ public class devicesFragment extends Fragment {
     ArrayList<String> listDevices = new ArrayList<>();
     String [] output;
     AddressAdaptor addressAdaptor;
+    Button addDeviceButton;
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -53,7 +56,13 @@ public class devicesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         page = inflater.inflate(R.layout.fragment_devices, container, false);
+        addDeviceButton = (Button)page.findViewById(R.id.buttonAddDevice);
         listViewDevices = (ListView)page.findViewById(R.id.listViewDevices);
+
+        addDeviceButton.setOnClickListener(e->{
+            startActivity(new Intent(getActivity(), generatePSK.class));
+
+        });
 //        RouterQuery rq = new RouterQuery();
   //      rq.execute(url);
         addressAdaptor = new AddressAdaptor(getActivity().getApplicationContext());
@@ -75,6 +84,8 @@ public class devicesFragment extends Fragment {
         listViewDevices.setAdapter(addressAdaptor);
         return page;
     }
+
+
 
 
     public class RouterQuery extends AsyncTask<String, Integer, String> {

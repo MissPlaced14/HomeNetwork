@@ -154,11 +154,8 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.action_about:
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                break;
+            break;
 
-            case R.id.action_add_psk:
-                startActivity(new Intent(MainActivity.this, generatePSK.class));
-                break;
         }
 
         return true;

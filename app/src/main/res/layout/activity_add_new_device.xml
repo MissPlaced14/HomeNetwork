@@ -17,18 +17,18 @@
         android:src="@drawable/telus_logo" />
 
 
-    <EditText
+    <TextView
         android:id="@+id/editTextPSK"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="265dp"
-        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:ems="10"
-        android:hint="Password to be added"
-        android:inputType="textPersonName" />
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:textAlignment="center"
+        android:textSize="40sp" />
 
     <Button
         android:id="@+id/buttonGeneratePSK"
@@ -37,10 +37,10 @@
         android:layout_below="@+id/editTextPSK"
         android:layout_alignParentStart="true"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="26dp"
         android:layout_marginEnd="20dp"
-        android:onClick="generatePSKClicked"
-        android:text="Generate Password" />
+        android:onClick="editPasswordClicked"
+        android:text="Edit Password" />
 
     <Button
         android:id="@+id/buttonSavePSK"

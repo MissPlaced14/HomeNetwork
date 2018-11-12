@@ -16,9 +16,4 @@
         android:orderInCategory="250"
         app:showAsAction="never" />
 
-    <item android:id="@+id/action_add_psk"
-        android:title="Add Password"
-        android:icon="@drawable/add_icon"
-        android:orderInCategory="300"
-        app:showAsAction="always" />
 </menu>

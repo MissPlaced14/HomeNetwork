@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/networkFrame"
-    tools:context="com.example.rajatkumar.homenetwork.networkFragment">
+    tools:context="com.example.rajatkumar.homenetwork.SettingsFragment">
 
 
     <RelativeLayout
