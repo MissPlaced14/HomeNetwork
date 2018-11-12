@@ -20,7 +20,7 @@ public class generatePSK extends Activity {
     Button buttonGeneratePSk;
     Button buttonSavePSk;
     Button buttonCancel;
-    String randomLetters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private String randomLetters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     //Creating a Random object to create random PSKs to be stored
     Random random;
     StringBuilder sb;
@@ -59,7 +59,6 @@ public class generatePSK extends Activity {
 
 
     public void savePSKClicked(View view) {
-
         if(editTextPSK.getText().length()<8){
             Toast toast = Toast.makeText(this, "Password shoud be at least 8 digits/alphabets long", Toast.LENGTH_LONG);
             toast.show();
