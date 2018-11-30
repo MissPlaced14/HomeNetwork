@@ -7,73 +7,67 @@
     tools:context=".generatePSK">
 
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="150sp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp"
-        android:src="@drawable/telus_logo" />
-
-
     <TextView
         android:id="@+id/editTextPSK"
+        style="@style/Base.TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="265dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="20dp"
-        style="@style/Base.TextAppearance.AppCompat.Title"
         android:textAlignment="center"
-        android:textSize="40sp" />
+        android:textSize="60sp" />
 
     <Button
         android:id="@+id/buttonGeneratePSK"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/buttonStyle"
         android:layout_below="@+id/editTextPSK"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="26dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="77dp"
+        android:layout_marginTop="196dp"
         android:onClick="editPasswordClicked"
         android:text="Edit Password" />
 
-    <Button
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/buttonSavePSK"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonGeneratePSK"
-        android:layout_alignStart="@+id/buttonGeneratePSK"
-        android:layout_marginStart="201sp"
-        android:layout_marginTop="20sp"
-        android:layout_marginEnd="20sp"
-        android:layout_marginBottom="30sp"
-        android:onClick="savePSKClicked"
-        android:text="Save Password" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="62dp"
+        android:layout_marginBottom="74dp"
+        android:clickable="true"
+        android:src="@drawable/tick_icon"
+        app:fabSize="normal"
+        app:rippleColor="@color/colorPurple" />
 
-    <Button
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/buttonSavePSK"
-        android:layout_marginStart="20dp"
-        android:text="Cancel" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="62dp"
+        android:layout_marginBottom="74dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/cross_icon"
+        app:fabSize="normal"
+        app:rippleColor="@color/colorPurple"/>
 
     <TextView
+        android:id="@+id/tvAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="160dp"
-        android:textStyle="italic"
-        android:textSize="20sp"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="149dp"
         android:text="Add New Device"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="20sp"
+        android:textStyle="italic" />
 
     <EditText
         android:id="@+id/editTextAlias"
@@ -81,20 +75,21 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/editTextPSK"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="200dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="218dp"
         android:ems="10"
         android:hint="Device Name (Alias)"
         android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/buttonAllPass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/editTextAlias"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="-48dp"
-        android:layout_marginBottom="34dp"
-        android:onClick="showPSKClicked"
-        android:text="Show all passwords" />
+
+    <Spinner
+        android:id="@+id/spinnerDeviceType"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/tvAdd"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/colorSpinner" />
 
 </RelativeLayout>

@@ -4,6 +4,7 @@ package com.example.rajatkumar.homenetwork;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,20 +12,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static java.lang.Thread.sleep;
 
@@ -36,21 +47,16 @@ public class devicesFragment extends Fragment {
     JSONObject jsonObject = null;
     Object obj = null;
     String url="http://192.168.1.1/ubus";
-    ArrayList<String> listDevices = new ArrayList<>();
     String [] output;
     AddressAdaptor addressAdaptor;
     Button addDeviceButton;
+    ArrayList<String> listDevices;
+    String results[];
 
+    ArrayList<String> arraylist2;
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        listDevices = new ArrayList<>();
-        listDevices.add("c8-ff-28-f1-81-fb");
-        listDevices.add("74-df-bf-8e-34-39");
-        listDevices.add("d1-bb-3e-22-a6-44");
-
-
     }
-
 
 
     @Override
@@ -58,13 +64,14 @@ public class devicesFragment extends Fragment {
         page = inflater.inflate(R.layout.fragment_devices, container, false);
         addDeviceButton = (Button)page.findViewById(R.id.buttonAddDevice);
         listViewDevices = (ListView)page.findViewById(R.id.listViewDevices);
+        listDevices = new ArrayList<String>();
 
         addDeviceButton.setOnClickListener(e->{
             startActivity(new Intent(getActivity(), generatePSK.class));
 
         });
-//        RouterQuery rq = new RouterQuery();
-  //      rq.execute(url);
+        RouterQuery rq = new RouterQuery();
+        rq.execute();
         addressAdaptor = new AddressAdaptor(getActivity().getApplicationContext());
         SwipeRefreshLayout pullToRefresh = page.findViewById(R.id.pullToRefreshDevices);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -81,131 +88,317 @@ public class devicesFragment extends Fragment {
 
         );
 
+
         listViewDevices.setAdapter(addressAdaptor);
+        addressAdaptor.notifyDataSetChanged();
+        listViewDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Bundle bundle_message = new Bundle();
+                bundle_message.putString("mac", listViewDevices.getItemAtPosition(i).toString());
+                Intent intent = new Intent(getActivity(), deleteActivity.class);
+                intent.putExtra("mac", listViewDevices.getItemAtPosition(i).toString());
+                startActivityForResult(intent, 500);
+            }
+        });
         return page;
     }
 
-
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ( resultCode == 600) {
+        addressAdaptor.notifyDataSetChanged();
+        }
+    }
 
 
     public class RouterQuery extends AsyncTask<String, Integer, String> {
 
         protected String doInBackground(String... args) {
 
-            String URL1 = args[0];
             RouterQuery rq = new RouterQuery();
-            String[] test = rq.getMacAddresses(rq.getUbusKey());
-            listDevices = new ArrayList<>();
-            while(true) {
+            String query_url = "http://192.168.1.1/ubus";
+            String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
 
-                for (int i = 0; i < test.length; i++) {
-                    Log.i("this is ", test[i]);
-                    listDevices.add(test[i]);
+            String token = rq.getToken(query_url, json);
+
+            rq.getDevicesText(query_url, token);
+            rq.getCurrConn(token);
+            return "finished";
+        }
+        private   String[] getCurrConn(String token) {
+            try {
+                String query_url = "http://192.168.1.1/ubus";
+
+                String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1524, \"method\": \"call\", \"params\": [ \""+token+"\", \"file\", \"exec\", { \"command\": \"luaScriptCurrConn\" } ] }";
+                //		String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1524, \"method\": \"call\", \"params\": [ \""+token+"\", \"file\", \"exec\", { \"command\": \"insertScript\",\"params\": [ \""+password+"\" ] } ] }";
+
+                URL url = new URL(query_url);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.setRequestMethod("POST");
+
+                OutputStream os = conn.getOutputStream();
+                os.write(json.getBytes("UTF-8"));
+                os.close();
+
+                // read the response
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                String result = IOUtils.toString(in, "UTF-8");
+
+
+                System.out.println(result);
+
+                //		System.out.println("result after Reading JSON Response");
+
+
+                result = result.substring(96, result.length()-6);
+//			System.out.println(result);
+                results = result.split("\\|");
+                for (int i = 0; i<results.length;i++) {
+                    //"\\r?\\n"
+                    results[i] = results[i].replace("\\n","");
+                    System.out.println(results[i]);
                 }
 
-                return "finished";
+                arraylist2 = new ArrayList<>(Arrays.asList(results));
 
+                in.close();
+                conn.disconnect();
+
+                return results;
+
+
+
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
             }
+
+        }
+        private  String updateFile(String token) {
+            try {
+                String query_url = "http://192.168.1.1/ubus";
+                String json = "{ \"jsonrpc\": \"2.0\", \"id\": 2005, \"method\": \"call\", \"params\": [ \""+token+"\", \"file\", \"exec\", { \"command\": \"selectDevices\" } ] }";
+
+                URL url = new URL(query_url);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.setRequestMethod("POST");
+
+                OutputStream os = conn.getOutputStream();
+                os.write(json.getBytes("UTF-8"));
+                os.close();
+
+                // read the response
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                String result = IOUtils.toString(in, "UTF-8");
+
+
+                System.out.println(result);
+
+                //		System.out.println("result after Reading JSON Response");
+
+
+                JSONObject myResponse = new JSONObject(result);
+
+
+
+                in.close();
+                conn.disconnect();
+                System.out.println(myResponse.toString());
+//			String FullText = myResponse.toString();
+//			FullText = FullText.substring(22);
+//			FullText = FullText.split("\n",3)[0];
+//			FullText = FullText.substring(0, FullText.length()-3);
+//			System.out.println(FullText);
+//
+                return myResponse.toString();
+
+
+
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+
+        }
+        private  String deletePassword(String token, String mac) {
+            try {
+                String query_url = "http://192.168.1.1/ubus";
+                String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1524, \"method\": \"call\", \"params\": [ \""+token+"\", \"file\", \"exec\", { \"command\": \"deleteScript\",\"params\": [ \""+mac+"\" ] } ] }";
+
+                URL url = new URL(query_url);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.setRequestMethod("POST");
+
+                OutputStream os = conn.getOutputStream();
+                os.write(json.getBytes("UTF-8"));
+                os.close();
+
+                // read the response
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                String result = IOUtils.toString(in, "UTF-8");
+
+                System.out.println("testing123");
+                System.out.println(result);
+
+                //		System.out.println("result after Reading JSON Response");
+
+
+                JSONObject myResponse = new JSONObject(result);
+
+
+
+                in.close();
+                conn.disconnect();
+                System.out.println(myResponse.toString());
+//			String FullText = myResponse.toString();
+//			FullText = FullText.substring(22);
+//			FullText = FullText.split("\n",3)[0];
+//			FullText = FullText.substring(0, FullText.length()-3);
+//			System.out.println(FullText);
+//
+                return myResponse.toString();
+
+
+
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+
+        }
+        private String getDevicesText(String source_url, String token) {
+            try {
+                String query_url = "http://192.168.1.1/ubus";
+                String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1000, \"method\": \"call\", \"params\": [ \""+token+"\", \"file\", \"read\", { \"path\": \"/root/newfile.txt\"} ] }";
+
+                URL url = new URL(query_url);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.setRequestMethod("POST");
+
+                OutputStream os = conn.getOutputStream();
+                os.write(json.getBytes("UTF-8"));
+                os.close();
+
+                // read the response
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                String result = IOUtils.toString(in, "UTF-8");
+
+
+                //		System.out.println(result);
+
+                //		System.out.println("result after Reading JSON Response");
+
+
+                JSONObject myResponse = new JSONObject(result);
+
+
+
+                in.close();
+                conn.disconnect();
+                System.out.println(myResponse.toString());
+
+                String fullText = myResponse.toString();
+                fullText = fullText.substring(22);
+                fullText = fullText.split("\\}",2)[0];
+                fullText = fullText.substring(0, fullText.length()-3);
+                String rows[] = fullText.split(" ", 0);
+                ArrayList<String> rowAl = new ArrayList<String>(Arrays.asList(rows));
+                ArrayList<String> cell = new ArrayList<String>();
+                for(int i = 0; i<rowAl.size(); i++) {
+                    cell.addAll(Arrays.asList(rowAl.get(i).split("\\|")));
+                }
+                for(int i = 0; i<cell.size(); i+=5) {
+                    listDevices.add(cell.get(i+1));
+                    //new Device(Integer.parseInt(cell.get(i)),cell.get(i+1),cell.get(i+2),cell.get(i+3),cell.get(i+4)));
+                }
+
+
+
+
+                return myResponse.toString();
+
+
+
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+
+
         }
 
-        @SuppressWarnings("unchecked")
-        public String [] getMacAddresses(String key) {
-            System.out.println(key);
-            //curl -d '{ "jsonrpc": "2.0", "id": 1, "method": "call", "params": [ "70235bc972c396ced14ff6eec1a6fa4d", "hostapd.wlan0", "get_clients", {} ] }'  http://192.168.1.1/ubus
-            String[] command = {"curl", "-d", "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \""+key+"\", \"hostapd.wlan0\", \"get_clients\", {} ] }",  url};
-            ProcessBuilder process = new ProcessBuilder(command);
-            Process p;
-            try
-            {
-                p = process.start();
-                BufferedReader reader =  new BufferedReader(new InputStreamReader(p.getInputStream()));
-                StringBuilder builder = new StringBuilder();
-                String line = null;
-                while ( (line = reader.readLine()) != null) {
-                    builder.append(line);
-                    builder.append(System.getProperty("line.separator"));
-                }
-                String result = builder.toString();
-                Log.i("result", result);
+        public String getToken(String query_url, String json) {
 
 
-                try {
-                    obj = parser.parse(result);
-                } catch (ParseException e) {
-                    Log.i("Error","there was an error parsing the JSON file");
-                }
-                jsonObject = (JSONObject) obj;
-                JSONArray resultJson = (JSONArray) jsonObject.get("result");
-                Log.i("Result Json",resultJson.toJSONString());
-                JSONObject dataJSON = (JSONObject) resultJson.get(1);
-                Log.i("Data json",dataJSON.toJSONString());
-                JSONObject clientsJSON = (JSONObject) dataJSON.get("clients");
-                Log.i("Client Json",clientsJSON.toJSONString());
-                String[] test = (String[]) clientsJSON.keySet().toArray(new String[clientsJSON.size()]);
-                return test;
-                //			return keyJSON;
+            try {
 
 
 
+
+                URL url = new URL(query_url);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.setRequestMethod("POST");
+
+                OutputStream os = conn.getOutputStream();
+                os.write(json.getBytes("UTF-8"));
+                os.close();
+
+                // read the response
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                String result = IOUtils.toString(in, "UTF-8");
+
+
+                //			System.out.println(result);
+
+                //			System.out.println("result after Reading JSON Response");
+
+
+                JSONObject myResponse = new JSONObject(result);
+                //			System.out.println("jsonrpc- "+myResponse.getString("result"));
+                //			System.out.println("id- "+myResponse.getInt("id"));
+                //			System.out.println("result- "+myResponse.getString("result"));
+
+
+                in.close();
+                conn.disconnect();
+                //			System.out.println(myResponse.get("result")["ubus_rpc_session"]);
+                JSONArray obj2 = (JSONArray) myResponse.get("result");
+                //			System.out.println(obj2.get(1).toString());
+                JSONObject obj3 = (JSONObject) obj2.get(1);
+
+
+                //			System.out.println(obj3.get("ubus_rpc_session").toString());
+                return 	obj3.get("ubus_rpc_session").toString();
+
+                //myResponse.getString("ubus_rpc_session");
+
+
+
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
             }
-            catch (IOException e)
-            {   System.out.print("error");
-                e.printStackTrace();
-            }
-            return null;
-        }
 
-
-
-
-
-
-        public String getUbusKey(){
-            String[] command = {"curl", "-d", "{ 'jsonrpc': '2.0', 'id': 1, 'method': 'call', 'params': [ '00000000000000000000000000000000', 'session', 'login', { 'username': 'root', 'password': 'algonquin'  } ] }",  url};
-            ProcessBuilder process = new ProcessBuilder(command);
-            Process p;
-            try
-            {
-                p = process.start();
-                BufferedReader reader =  new BufferedReader(new InputStreamReader(p.getInputStream()));
-                StringBuilder builder = new StringBuilder();
-                String line = null;
-                while ( (line = reader.readLine()) != null) {
-                    builder.append(line);
-                    builder.append(System.getProperty("line.separator"));
-                }
-                String result = builder.toString();
-                Log.e("result","????????");
-                Log.e("result",result);
-
-
-                try {
-                    obj = parser.parse(result);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    System.out.println("second there was an error parsing the JSON file");
-                }
-                jsonObject = (JSONObject) obj;
-                JSONArray resultJson = (JSONArray) jsonObject.get("result");
-                System.out.println(resultJson.toJSONString());
-                JSONObject dataJSON = (JSONObject) resultJson.get(1);
-                System.out.println(dataJSON.toJSONString());
-                String keyJSON = (String) dataJSON.get("ubus_rpc_session");
-                return keyJSON;
-
-
-//			   JSONObject radio1 = (JSONObject) jsonObject.get("radio1");
-//		        JSONArray interfaces = (JSONArray) radio1.get("interfaces");
-//		        JSONObject interface0 = (JSONObject) interfaces.get(0);
-//		        JSONObject config = (JSONObject) interface0.get("config");
-
-            }
-            catch (IOException e)
-            {   System.out.print("error");
-                Log.e("IOError","Error retrieving data");
-                e.printStackTrace();
-            }
-            return "";
         }
         public void onProgressUpdate(Integer... data) {
 
@@ -233,6 +426,10 @@ public class devicesFragment extends Fragment {
             View result = inflater.inflate(R.layout.connected_devices_row, null);
             TextView address = (TextView)result.findViewById(R.id.device_mac);
             address.setText(   getItem(position)  ); // get the string at position
+
+            if(arraylist2.contains(getItem(position) )){
+                address.setTextColor(Color.GREEN);
+            }
             return result;
         }
 

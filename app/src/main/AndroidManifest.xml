@@ -24,7 +24,8 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".generatePSK" />
-        <activity android:name=".ShowPasswordActivity"></activity>
+        <activity android:name=".ShowPasswordActivity" />
+        <activity android:name=".deleteActivity"></activity>
     </application>
 
 </manifest>

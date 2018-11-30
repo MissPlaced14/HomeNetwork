@@ -6,4 +6,6 @@
     <color name="colorPurple">#800080</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGreen">#10ca0d</color>
+    <color name="colorSpinner">#E3DDDD</color>
+
 </resources>
