@@ -37,7 +37,7 @@ public class deleteActivity extends Activity {
         token = getToken(query_url, json);
         buttonDelete.setOnClickListener(e->{
 
-            deletePassword(token, b.getString("mac"));
+            deletePassword(token, textView.getText().toString());
 
             Intent resultIntent = new Intent();
             setResult(600, resultIntent);
