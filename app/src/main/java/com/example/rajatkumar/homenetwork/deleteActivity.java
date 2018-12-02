@@ -3,6 +3,7 @@ package com.example.rajatkumar.homenetwork;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,15 +32,19 @@ public class deleteActivity extends Activity {
 
         Bundle b = getIntent().getExtras();
         textView.setText(b.getString("mac"));
-        String query_url = "http://192.168.1.1/ubus";
-        String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
+        Log.i("mac", textView.getText().toString());
 
-        token = getToken(query_url, json);
         buttonDelete.setOnClickListener(e->{
+            String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
+            String query_url = "http://192.168.1.1/ubus";
 
-            deletePassword(token, textView.getText().toString());
+//            token = getToken(query_url, json);
+//            Log.i("token", token);
+//            deletePassword(token, textView.getText().toString());
+//            Log.i("password", textView.getText().toString());
 
             Intent resultIntent = new Intent();
+            resultIntent.putExtra("SendingID",b.getString("mac"));
             setResult(600, resultIntent);
             finish();
         });

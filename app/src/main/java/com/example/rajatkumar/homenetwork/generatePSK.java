@@ -155,7 +155,7 @@ public class generatePSK extends AppCompatActivity{
             String query_url = "http://192.168.1.1/ubus";
             String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
             String token = getToken(query_url, json);
-
+            Log.i("password ", newPassword);
             insertPassword(token, newPassword);
             return "";
         }
@@ -199,7 +199,7 @@ public class generatePSK extends AppCompatActivity{
                 System.out.println(e);
                 value ="Connection went wrong";
 
-                return null;
+                return value;
             }
 
         }

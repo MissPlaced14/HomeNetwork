@@ -106,7 +106,16 @@ public class devicesFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ( resultCode == 600) {
-        addressAdaptor.notifyDataSetChanged();
+            String query_url = "http://192.168.1.1/ubus";
+            String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
+            Bundle extras = data.getExtras();
+            String comingID = (String) extras.getString("SendingID");
+//            Log.i("id", comingID);
+            RouterQuery rq = new RouterQuery();
+            rq.deletePassword(comingID);
+            rq.execute();
+            listDevices.clear();
+            addressAdaptor.notifyDataSetChanged();
         }
     }
 
@@ -120,7 +129,8 @@ public class devicesFragment extends Fragment {
             String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
 
             String token = rq.getToken(query_url, json);
-
+            Log.i("token1",token);
+            rq.updateFile(token);
             rq.getDevicesText(query_url, token);
             rq.getCurrConn(token);
             return "finished";
@@ -228,9 +238,14 @@ public class devicesFragment extends Fragment {
             }
 
         }
-        private  String deletePassword(String token, String mac) {
+        private  String deletePassword(String mac) {
             try {
+                String query_urlt = "http://192.168.1.1/ubus";
+                String jsont = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
+
+                String token = getToken(query_urlt, jsont);
                 String query_url = "http://192.168.1.1/ubus";
+                Log.i("token3", token);
                 String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1524, \"method\": \"call\", \"params\": [ \""+token+"\", \"file\", \"exec\", { \"command\": \"deleteScript\",\"params\": [ \""+mac+"\" ] } ] }";
 
                 URL url = new URL(query_url);
