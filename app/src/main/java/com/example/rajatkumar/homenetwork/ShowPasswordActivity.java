@@ -32,7 +32,7 @@ public class ShowPasswordActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_password);
-        listViewDevices = (ListView)findViewById(R.id.listviewPassword);
+        listViewDevices = findViewById(R.id.listviewPassword);
 
         Select select = new Select();
         select.execute("");
@@ -58,8 +58,8 @@ public class ShowPasswordActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent){
             LayoutInflater inflater = ShowPasswordActivity.this.getLayoutInflater();
             View result = inflater.inflate(R.layout.all_passwords_row, null);
-            TextView address = (TextView)result.findViewById(R.id.all_address);
-            TextView password = (TextView)result.findViewById(R.id.all_pass);
+            TextView address = result.findViewById(R.id.all_address);
+            TextView password = result.findViewById(R.id.all_pass);
             address.setText(   getItem(position).address  ); // get the string at position
             password.setText(   getItem(position).password  );
             return result;
@@ -67,7 +67,7 @@ public class ShowPasswordActivity extends Activity {
 
         public long getId(int position){
             return position;
-        };
+        }
     }
 
 

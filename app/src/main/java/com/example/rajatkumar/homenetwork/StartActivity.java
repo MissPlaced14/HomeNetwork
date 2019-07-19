@@ -26,9 +26,9 @@ public class StartActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        textView = (TextView)findViewById(R.id.welcomeText);
-        buttonStart = (Button)findViewById(R.id.buttonStart);
-        checkBoxTerms = (CheckBox)findViewById(R.id.checkBoxTerms);
+        textView = findViewById(R.id.welcomeText);
+        buttonStart = findViewById(R.id.buttonStart);
+        checkBoxTerms = findViewById(R.id.checkBoxTerms);
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
         agreed = sharedPreferences.getBoolean("agreed",false);
 
@@ -38,22 +38,21 @@ public class StartActivity extends Activity {
             finish();
         }
 
-        checkBoxTerms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    buttonStart.setEnabled(true);
-                } else {
-                    buttonStart.setEnabled(false);
-                }
+        checkBoxTerms.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                buttonStart.setEnabled(true);
+            } else {
+                buttonStart.setEnabled(false);
+            }
 
-            }});
+        });
 
     }
 
     public void buttonStartClicked(View view) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("agreed", true);
-        editor.commit();
+        editor.apply();
         Intent intent = new Intent(StartActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

@@ -1,39 +1,22 @@
 package com.example.rajatkumar.homenetwork;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
         fm = getFragmentManager();
         ft = fm.beginTransaction();
 
-        navigation = (BottomNavigationView) findViewById(R.id.navigationMain);
+        navigation = findViewById(R.id.navigationMain);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -116,25 +99,22 @@ public class MainActivity extends AppCompatActivity {
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
                     builder.setMessage(R.string.dialog_message)
                             .setTitle(R.string.dialog_title)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+                            .setPositiveButton(R.string.ok, (dialog, id) -> {
 
-                                    // Cleaning the stored email and password from sharedPreferences
-                                    editor.clear();
-                                    editor.commit();
+                                // Cleaning the stored email and password from sharedPreferences
+                                editor.clear();
+                                editor.apply();
 
-                                    //Starting the login activity again after nothing is stored
-                                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
+                                //Starting the login activity again after nothing is stored
+                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
                             })
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
+                            .setNegativeButton(R.string.cancel, (dialog, id) -> {
                             })
                             .show();
                     return true;
+
             }
             return false;
         }

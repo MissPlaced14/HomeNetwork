@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -52,6 +55,8 @@ public class devicesFragment extends Fragment {
     Button addDeviceButton;
     ArrayList<String> listDevices;
     String results[];
+    Toast rqErrorToast;
+
 
     ArrayList<String> arraylist2;
     public void onCreate(Bundle bundle) {
@@ -65,6 +70,7 @@ public class devicesFragment extends Fragment {
         addDeviceButton = (Button)page.findViewById(R.id.buttonAddDevice);
         listViewDevices = (ListView)page.findViewById(R.id.listViewDevices);
         listDevices = new ArrayList<String>();
+        Toast rqErrorToast = Toast.makeText(this.getActivity(), "Router Query Error", Toast.LENGTH_SHORT);
 
         addDeviceButton.setOnClickListener(e->{
             startActivity(new Intent(getActivity(), generatePSK.class));
@@ -112,10 +118,14 @@ public class devicesFragment extends Fragment {
             String comingID = (String) extras.getString("SendingID");
 //            Log.i("id", comingID);
             RouterQuery rq = new RouterQuery();
-            rq.deletePassword(comingID);
-            rq.execute();
-            listDevices.clear();
-            addressAdaptor.notifyDataSetChanged();
+            if (rq != null) {
+                rq.deletePassword(comingID);
+                rq.execute();
+                listDevices.clear();
+                addressAdaptor.notifyDataSetChanged();
+            } else {
+                rqErrorToast.show();
+            }
         }
     }
 
@@ -125,11 +135,11 @@ public class devicesFragment extends Fragment {
         protected String doInBackground(String... args) {
 
             RouterQuery rq = new RouterQuery();
+            //TODO Write some JSON
             String query_url = "http://192.168.1.1/ubus";
             String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
-
             String token = rq.getToken(query_url, json);
-            Log.i("token1",token);
+            Log.i("token1","foo");
             rq.updateFile(token);
             rq.getDevicesText(query_url, token);
             rq.getCurrConn(token);
@@ -183,6 +193,7 @@ public class devicesFragment extends Fragment {
 
 
             } catch (Exception e) {
+
                 System.out.println(e);
                 return null;
             }
