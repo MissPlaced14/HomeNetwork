@@ -31,34 +31,31 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
-public class generatePSK extends AppCompatActivity{
+/** This class is for randomly generating passwords
+ * and ensuring the
+ */
+public class generatePSK extends AppCompatActivity {
     TextView textPassword;
     Button buttonGeneratePSk;
     FloatingActionButton buttonSavePSk;
-    FloatingActionButton  buttonCancel;
+    FloatingActionButton buttonCancel;
     private Spinner spinner;
     private String randomLetters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     //Creating a Random object to create random PSKs to be stored
     Random random = new Random();
     StringBuilder sb;
-
-    final String DB_URL= "jdbc:mysql://192.168.1.240:3306/radius";
-    final String USER = "user";
-    final String PASS = "P@$$w0rd";
-    String PSK="";
-    String value="";
+    String value = "";
     AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_device);
-        textPassword = (TextView)findViewById(R.id.editTextPSK);
-        buttonGeneratePSk = (Button)findViewById(R.id.buttonGeneratePSK);
-        buttonSavePSk = (FloatingActionButton )findViewById(R.id.buttonSavePSK);
-        buttonCancel = (FloatingActionButton )findViewById(R.id.buttonCancel);
-        spinner = (Spinner)findViewById(R.id.spinnerDeviceType);
+        textPassword = findViewById(R.id.editTextPSK);
+        buttonGeneratePSk = findViewById(R.id.buttonGeneratePSK);
+        buttonSavePSk = findViewById(R.id.buttonSavePSK);
+        buttonCancel = findViewById(R.id.buttonCancel);
+        spinner = findViewById(R.id.spinnerDeviceType);
         sb = new StringBuilder();
         String[] type = new String[]{
                 "Personal",
@@ -66,7 +63,7 @@ public class generatePSK extends AppCompatActivity{
                 "Smart Device"
         };
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,android.R.layout.simple_spinner_item, type
+                this, android.R.layout.simple_spinner_item, type
         );
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -75,7 +72,7 @@ public class generatePSK extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 parent.getItemAtPosition(position);
-                Log.i("selection",parent.getItemAtPosition(position).toString());
+                Log.i("selection", parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -85,14 +82,12 @@ public class generatePSK extends AppCompatActivity{
         });
 
         randomGenerator();
-        buttonCancel.setOnClickListener(e->{
-            finish();
-        });
+        buttonCancel.setOnClickListener(e -> finish());
     }
 
-    public void randomGenerator(){
+    public void randomGenerator() {
         sb.setLength(0);
-        for (int i =0; i<8; i++){
+        for (int i = 0; i < 8; i++) {
             sb.append(randomLetters.charAt(random.nextInt(randomLetters.length())));
         }
         textPassword.setText(sb);
@@ -106,7 +101,7 @@ public class generatePSK extends AppCompatActivity{
     public void editPasswordClicked(View view) {
         LayoutInflater inflater = getLayoutInflater();
         View view2 = inflater.inflate(R.layout.custom_dialog_layout, null);
-        EditText editText = (EditText) view2.findViewById(R.id.newPassword);
+        EditText editText = view2.findViewById(R.id.newPassword);
 
         builder = new AlertDialog.Builder(generatePSK.this);
         builder.setTitle("Create your own Password");
@@ -115,11 +110,10 @@ public class generatePSK extends AppCompatActivity{
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
 
-                if(editText.getText().length()<8){
+                if (editText.getText().length() < 8) {
                     Toast toast = Toast.makeText(generatePSK.this, "Password should be at least of 8 Characters", Toast.LENGTH_LONG);
                     toast.show();
-                }
-                else {
+                } else {
                     textPassword.setText(editText.getText().toString());
                 }
             }
@@ -136,16 +130,14 @@ public class generatePSK extends AppCompatActivity{
     }
 
     public void savePSKClicked(View view) {
-        if(textPassword.getText().length()<8){
+        if (textPassword.getText().length() < 8) {
             Toast toast = Toast.makeText(this, "Password shoud be at least 8 digits/alphabets long", Toast.LENGTH_LONG);
             toast.show();
-        }
-        else {
+        } else {
             InsertPassword insert = new InsertPassword();
             insert.execute(textPassword.getText().toString());
         }
     }
-
 
 
     public class InsertPassword extends AsyncTask<String, Integer, String> {
@@ -160,10 +152,10 @@ public class generatePSK extends AppCompatActivity{
             return "";
         }
 
-        private  String insertPassword(String token, String password) {
+        private String insertPassword(String token, String password) {
             try {
                 String query_url = "http://192.168.1.1/ubus";
-                String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1524, \"method\": \"call\", \"params\": [ \""+token+"\", \"file\", \"exec\", { \"command\": \"/root/insertScript\",\"params\": [ \""+password+"\" ] } ] }";
+                String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1524, \"method\": \"call\", \"params\": [ \"" + token + "\", \"file\", \"exec\", { \"command\": \"/root/insertScript\",\"params\": [ \"" + password + "\" ] } ] }";
 
                 URL url = new URL(query_url);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -188,22 +180,20 @@ public class generatePSK extends AppCompatActivity{
 
 
                 JSONObject myResponse = new JSONObject(result);
-                value = "New Password created as "+password;
+                value = "New Password created as " + password;
                 in.close();
                 conn.disconnect();
                 return myResponse.toString();
 
 
-
             } catch (Exception e) {
                 System.out.println(e);
-                value ="Connection went wrong";
+                value = "Connection went wrong";
 
                 return value;
             }
 
         }
-
 
 
         public String getToken(String query_url, String json) {
@@ -212,8 +202,6 @@ public class generatePSK extends AppCompatActivity{
             try {
 
 
-
-
                 URL url = new URL(query_url);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(5000);
@@ -237,23 +225,14 @@ public class generatePSK extends AppCompatActivity{
 
 
                 JSONObject myResponse = new JSONObject(result);
-//			System.out.println("jsonrpc- "+myResponse.getString("result"));
-//			System.out.println("id- "+myResponse.getInt("id"));
-//			System.out.println("result- "+myResponse.getString("result"));
-
 
                 in.close();
                 conn.disconnect();
-//			System.out.println(myResponse.get("result")["ubus_rpc_session"]);
                 JSONArray obj2 = (JSONArray) myResponse.get("result");
                 System.out.println(obj2.get(1).toString());
                 JSONObject obj3 = (JSONObject) obj2.get(1);
                 System.out.println(obj3.get("ubus_rpc_session").toString());
-                return 	obj3.get("ubus_rpc_session").toString();
-
-                //myResponse.getString("ubus_rpc_session");
-
-
+                return obj3.get("ubus_rpc_session").toString();
 
             } catch (Exception e) {
                 System.out.println(e);
@@ -261,6 +240,7 @@ public class generatePSK extends AppCompatActivity{
             }
 
         }
+
         public void onPostExecute(String result) {
             randomGenerator();
             Toast toast = Toast.makeText(generatePSK.this, value, Toast.LENGTH_LONG);
@@ -268,43 +248,4 @@ public class generatePSK extends AppCompatActivity{
         }
 
     }
-
-//    public class Insert extends AsyncTask<String, Integer, String> {
-//
-//
-//        protected String doInBackground(String... args) {
-//            PSK = args[0];
-//            try
-//            {
-//                Class.forName("com.mysql.jdbc.Driver");
-//                Connection conn = DriverManager.getConnection(DB_URL,USER,PASS);
-//
-//                if(conn == null) {
-//                    value ="Connection goes wrong";
-//                } else {
-//                    String query = "INSERT INTO radreply VALUES (null, '00-00-00-00-00-00', 'Tunnel-Password', ':=', '"+PSK +"') ";
-//                    Statement stmt = conn.createStatement();
-//                    stmt.executeUpdate(query);
-//                    value = "Inserted successfully";
-//                    System.out.println(value);
-//                }
-//
-//                conn.close();
-//            }
-//            catch (Exception e)
-//            {
-//                value ="Connection goes wrong";
-//                e.printStackTrace();
-//            }
-//            return value;
-//        }
-
-//        public void onPostExecute(String result) {
-//            textPassword.setText("");
-//            Toast toast = Toast.makeText(generatePSK.this, value, Toast.LENGTH_LONG);
-//            toast.show();
-//        }
-//
-//    }
-
 }

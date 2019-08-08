@@ -32,9 +32,14 @@ public class MainActivity extends AppCompatActivity {
 
     FragmentManager fm;
     FragmentTransaction ft;
+    //* Bottom Navigation Menu */
     BottomNavigationView navigation;
 
     String data;
+    /**
+     *
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
         fm = getFragmentManager();
         ft = fm.beginTransaction();
-
+        /** navigation menu */
         navigation = findViewById(R.id.navigationMain);
+        /** navigation listner */
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -54,14 +60,17 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.mainFrame, nf);
         ft.commit();
 
-   //     RouterQuery routerQuery = new RouterQuery();
-        // routerQuery.execute(command1);
     }
+    // Bottom Nav Menu Listener
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
+
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
+
+                // Replace main frame with networkFragment
+                // networkFragment contains speed test
                 case R.id.nav_networks:
 
                     if(navigation.getSelectedItemId()!=R.id.nav_networks) {
@@ -72,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
                         ft.commit();
                     }
                     return true;
+                // Replaces main frame with deviceFragment
+                // devicesFragment contains a LisView of connected devices
                 case R.id.nav_devices:
                     ft = fm.beginTransaction();
                     devicesFragment df = new devicesFragment();
@@ -79,21 +90,23 @@ public class MainActivity extends AppCompatActivity {
                     ft.commit();
 
                     return true;
+                // UsersFragment contains arraylist of users (should be fixed)
                 case R.id.nav_users:
                     ft = fm.beginTransaction();
                     UsersFragment uf = new UsersFragment();
                     ft.replace(R.id.mainFrame, uf);
                     ft.commit();
                     return true;
+                // SettingsFragment contains option to toggle SSIDs on/off
                 case R.id.nav_setting:
                     ft = fm.beginTransaction();
                     SettingsFragment sf = new SettingsFragment();
                     ft.replace(R.id.mainFrame, sf);
                     ft.commit();
                     return true;
+                // asks iuser to confirm logout,
+                // returns to login page
                 case R.id.nav_logout:
-
-
                     SharedPreferences sharedPreferences = getSharedPreferences("userFile", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
@@ -119,10 +132,12 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+    /** Top menu bar with "About" and "Options" */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
+
     public boolean onOptionsItemSelected(MenuItem mi) {
         switch (mi.getItemId()) {
             case R.id.action_user:
@@ -140,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-
 //    public class RouterQuery extends AsyncTask<String, Integer, String> {
 //
 //        protected String doInBackground(String... args) {

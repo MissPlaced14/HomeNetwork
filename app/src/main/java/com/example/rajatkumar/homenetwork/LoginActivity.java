@@ -18,11 +18,10 @@ public class LoginActivity extends Activity {
     private static final String file = "userFile";
     private static final String userName = "userName";
     private static final String passWord = "passWord";
-    private Button buttonLogin, buttonSignup;
+    private Button buttonLogin;
     private EditText editTextUserName, editTextPassword;
     private String adminPassword ="password";
     private CheckBox checkBoxRemember;
-    private String passwordFilled;
     private boolean remember;
 
 
@@ -32,10 +31,10 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         Log.i(ACTIVITY_NAME, "in onCreate(): ");
 
-        buttonLogin = (Button) findViewById(R.id.buttonLogin);
-        editTextUserName = (EditText) findViewById(R.id.editTextUsername);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        checkBoxRemember= (CheckBox) findViewById(R.id.checkBoxRemember);
+        buttonLogin = findViewById(R.id.buttonLogin);
+        editTextUserName = findViewById(R.id.editTextUsername);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        checkBoxRemember = findViewById(R.id.checkBoxRemember);
 
         SharedPreferences sharedPref = getSharedPreferences( file, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -50,7 +49,7 @@ public class LoginActivity extends Activity {
 
 
         editTextUserName.setText(sharedPref.getString(userName, "email@domain.com"));
-        editTextPassword.setText(sharedPref.getString(passWord, ""));
+        editTextPassword.setText(sharedPref.getString(passWord, "password"));
         buttonLogin.setOnClickListener(e-> {
 
             if(editTextPassword.getText().toString().equals(adminPassword)) {
@@ -58,7 +57,7 @@ public class LoginActivity extends Activity {
                     editor.putString(userName, editTextUserName.getText().toString());
                     editor.putString(passWord, editTextPassword.getText().toString());
                     editor.putBoolean("Remember", true);
-                    editor.commit();
+                    editor.apply();
                 }
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);

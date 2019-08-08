@@ -19,7 +19,8 @@
             android:layout_below="@+id/textConnected"
             android:layout_marginStart="54dp"
             android:layout_marginTop="45dp"
-            android:text="Speed Test" />
+            android:text="Speed Test"
+        />
 
         <TextView
             android:id="@+id/textConnected"
@@ -27,9 +28,9 @@
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/buttonSpeed"
             android:layout_marginTop="35dp"
-            android:text="Connected to OpenWRT"
+            android:text="Home Network Monitoring and Control"
             android:textSize="25sp"
-            />
+        />
 
         <TextView
             android:id="@+id/textDownload"
@@ -38,8 +39,7 @@
             android:layout_below="@+id/buttonSpeed"
             android:layout_marginTop="76dp"
             android:text="Download speed"
-            android:visibility="invisible"
-            />
+        />
 
         <TextView
             android:id="@+id/textUpload"
@@ -48,8 +48,7 @@
             android:layout_below="@+id/textDownload"
             android:layout_marginTop="51dp"
             android:text="Upload speed"
-            android:visibility="invisible"
-            />
-    </RelativeLayout>
+        />
+</RelativeLayout>
 
 </FrameLayout>

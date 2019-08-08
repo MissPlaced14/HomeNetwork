@@ -28,13 +28,13 @@ public class UsersFragment extends Fragment {
 
         View page2;
 
-        listUsers.add("Carlos");
-        listUsers.add("Dean");
-        listUsers.add("Urvesh");
-        listUsers.add("Ankit");
-        listUsers.add("Rajat");
+        listUsers.add("Carlos\n");
+        listUsers.add("Dean\n");
+        listUsers.add("Urvesh\n");
+        listUsers.add("Ankit\n");
+        listUsers.add("Rajat\n");
         page2 = inflater.inflate(R.layout.fragment_users, container, false);
-        gridViewUsers = (GridView)page2.findViewById(R.id.gridViewUsers);
+        gridViewUsers = page2.findViewById(R.id.gridViewUsers);
 
         usersAdaptor = new UsersFragment.UsersAdaptor(getActivity().getApplicationContext());
 
@@ -71,7 +71,7 @@ public class UsersFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent){
             LayoutInflater inflater = getActivity().getLayoutInflater();
             View result = inflater.inflate(R.layout.connected_devices_row, null);
-            TextView address = (TextView)result.findViewById(R.id.device_mac);
+            TextView address = result.findViewById(R.id.device_mac);
             address.setText(   getItem(position)  ); // get the string at position
             return result;
         }
