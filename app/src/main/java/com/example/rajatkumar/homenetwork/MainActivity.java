@@ -61,7 +61,15 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
 
     }
-    // Bottom Nav Menu Listener
+
+    /**
+     * Bottom Nav Menu Listener
+     * nav_networks: loads networkFragment (speed test)
+     * nav_device: loads devicesFragment (ListView of connected devices, option to add new device)
+     * nav_users: loads UsersFragment (ArrayList of current users)
+     * nav_setting: loads SettingsFragment(Toggle SSID on/off)
+     *
+      **/
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
@@ -76,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
                     if(navigation.getSelectedItemId()!=R.id.nav_networks) {
                         ft = fm.beginTransaction();
                         networkFragment nf = new networkFragment();
-//                      mf.setArguments();
                         ft.replace(R.id.mainFrame, nf);
                         ft.commit();
                     }
@@ -104,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
                     ft.replace(R.id.mainFrame, sf);
                     ft.commit();
                     return true;
-                // asks iuser to confirm logout,
+
+                // asks user to confirm logout,
                 // returns to login page
                 case R.id.nav_logout:
                     SharedPreferences sharedPreferences = getSharedPreferences("userFile", MODE_PRIVATE);
@@ -132,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
     /** Top menu bar with "About" and "Options" */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);

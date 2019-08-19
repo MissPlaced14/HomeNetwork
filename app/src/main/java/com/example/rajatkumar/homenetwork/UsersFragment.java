@@ -78,6 +78,6 @@ public class UsersFragment extends Fragment {
 
         public long getId(int position){
             return position;
-        };
+        }
     }
 }

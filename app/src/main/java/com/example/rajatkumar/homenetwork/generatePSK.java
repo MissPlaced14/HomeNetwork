@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -166,7 +167,7 @@ public class generatePSK extends AppCompatActivity {
                 conn.setRequestMethod("POST");
 
                 OutputStream os = conn.getOutputStream();
-                os.write(json.getBytes("UTF-8"));
+                os.write(json.getBytes(StandardCharsets.UTF_8));
                 os.close();
 
                 // read the response
@@ -211,7 +212,7 @@ public class generatePSK extends AppCompatActivity {
                 conn.setRequestMethod("POST");
 
                 OutputStream os = conn.getOutputStream();
-                os.write(json.getBytes("UTF-8"));
+                os.write(json.getBytes(StandardCharsets.UTF_8));
                 os.close();
 
                 // read the response
