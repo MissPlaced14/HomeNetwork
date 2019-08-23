@@ -21,15 +21,6 @@ import org.json.simple.parser.JSONParser;
 public class MainActivity extends AppCompatActivity {
 
     private static final String file = "userFile";
-    TextView tv;
-    String host="192.168.1.1";
-    String user="root";
-    String password="password";
-    String command1="ubus call network.wireless status";
-    //  String command2="ubus call hostapd.wlan1 get_clients";
-    JSONParser parser = new JSONParser();
-    JSONObject jsonObject = null;
-
     FragmentManager fm;
     FragmentTransaction ft;
     //* Bottom Navigation Menu */
