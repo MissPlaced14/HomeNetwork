@@ -105,14 +105,14 @@ public class generatePSK extends AppCompatActivity {
         EditText editText = view2.findViewById(R.id.newPassword);
 
         builder = new AlertDialog.Builder(generatePSK.this);
-        builder.setTitle("Create your own Password");
+        builder.setTitle("Create Password");
         builder.setView(view2);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
 
                 if (editText.getText().length() < 8) {
-                    Toast toast = Toast.makeText(generatePSK.this, "Password should be at least of 8 Characters", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(generatePSK.this, "Password should be at least 8 Characters", Toast.LENGTH_LONG);
                     toast.show();
                 } else {
                     textPassword.setText(editText.getText().toString());
@@ -189,7 +189,7 @@ public class generatePSK extends AppCompatActivity {
 
             } catch (Exception e) {
                 System.out.println(e);
-                value = "Connection went wrong";
+                value = "Connection error";
 
                 return value;
             }

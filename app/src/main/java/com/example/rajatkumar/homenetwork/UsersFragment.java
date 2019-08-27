@@ -28,25 +28,22 @@ public class UsersFragment extends Fragment {
 
         View page2;
 
-        listUsers.add("Carlos\n");
-        listUsers.add("Dean\n");
-        listUsers.add("Urvesh\n");
-        listUsers.add("Ankit\n");
-        listUsers.add("Rajat\n");
+        listUsers.add("Carlos");
+        listUsers.add("Dean");
+        listUsers.add("Urvesh");
+        listUsers.add("Ankit");
+        listUsers.add("Rajat");
         page2 = inflater.inflate(R.layout.fragment_users, container, false);
         gridViewUsers = page2.findViewById(R.id.gridViewUsers);
 
         usersAdaptor = new UsersFragment.UsersAdaptor(getActivity().getApplicationContext());
 
         SwipeRefreshLayout pullToRefresh = page2.findViewById(R.id.pullToRefreshUsers);
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                pullToRefresh.setRefreshing(true);
+        pullToRefresh.setOnRefreshListener(() -> {
+            pullToRefresh.setRefreshing(true);
 
-                if (pullToRefresh.isRefreshing()){
-                    pullToRefresh.setRefreshing(false);
-                }
+            if (pullToRefresh.isRefreshing()){
+                pullToRefresh.setRefreshing(false);
             }
         });
 
@@ -58,7 +55,7 @@ public class UsersFragment extends Fragment {
 
     private class UsersAdaptor extends ArrayAdapter<String> {
 
-        public UsersAdaptor(Context ctx) {
+        UsersAdaptor(Context ctx) {
             super(ctx, 0);
         }
 
@@ -68,6 +65,7 @@ public class UsersFragment extends Fragment {
         public String getItem(int position){
             return listUsers.get(position);
         }
+        @Override
         public View getView(int position, View convertView, ViewGroup parent){
             LayoutInflater inflater = getActivity().getLayoutInflater();
             View result = inflater.inflate(R.layout.connected_devices_row, null);

@@ -25,7 +25,11 @@
         <activity android:name=".AboutActivity" />
         <activity android:name=".generatePSK" />
         <activity android:name=".ShowPasswordActivity" />
-        <activity android:name=".deleteActivity"></activity>
+        <activity android:name=".deleteActivity" />
+        <service
+            android:name=".RouterQueryService"
+            android:exported="false"
+        />
     </application>
 
 </manifest>
