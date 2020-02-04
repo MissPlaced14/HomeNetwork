@@ -32,8 +32,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/** This class is for randomly generating passwords
- * and ensuring the
+/** This class is for randomly generating and storing passwords for VLANs
  */
 public class generatePSK extends AppCompatActivity {
     TextView textPassword;
@@ -45,7 +44,6 @@ public class generatePSK extends AppCompatActivity {
     //Creating a Random object to create random PSKs to be stored
     Random random = new Random();
     StringBuilder sb;
-    String value = "";
     AlertDialog.Builder builder;
 
     @Override
@@ -86,6 +84,9 @@ public class generatePSK extends AppCompatActivity {
         buttonCancel.setOnClickListener(e -> finish());
     }
 
+    /**
+     * Generates random password 8 char long
+     */
     public void randomGenerator() {
         sb.setLength(0);
         for (int i = 0; i < 8; i++) {
@@ -94,11 +95,11 @@ public class generatePSK extends AppCompatActivity {
         textPassword.setText(sb);
     }
 
-    public void showPSKClicked(View view) {
-        startActivity(new Intent(generatePSK.this, ShowPasswordActivity.class));
 
-    }
-
+    /**
+     *
+     * @param view
+     */
     public void editPasswordClicked(View view) {
         LayoutInflater inflater = getLayoutInflater();
         View view2 = inflater.inflate(R.layout.custom_dialog_layout, null);
@@ -107,22 +108,15 @@ public class generatePSK extends AppCompatActivity {
         builder = new AlertDialog.Builder(generatePSK.this);
         builder.setTitle("Create Password");
         builder.setView(view2);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-
-                if (editText.getText().length() < 8) {
-                    Toast toast = Toast.makeText(generatePSK.this, "Password should be at least 8 Characters", Toast.LENGTH_LONG);
-                    toast.show();
-                } else {
-                    textPassword.setText(editText.getText().toString());
-                }
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+            if (editText.getText().length() < 8) {
+                Toast toast = Toast.makeText(generatePSK.this, "Password should be at least 8 Characters", Toast.LENGTH_LONG);
+                toast.show();
+            } else {
+                textPassword.setText(editText.getText().toString());
             }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-            }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
         });
         // Create the AlertDialog
         AlertDialog dialog2 = builder.create();
@@ -130,123 +124,18 @@ public class generatePSK extends AppCompatActivity {
 
     }
 
-    public void savePSKClicked(View view) {
+    public void editPassword(View view) {
         if (textPassword.getText().length() < 8) {
-            Toast toast = Toast.makeText(this, "Password shoud be at least 8 digits/alphabets long", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "Password should be at least 8 digits/alphabets long", Toast.LENGTH_LONG);
             toast.show();
         } else {
-            InsertPassword insert = new InsertPassword();
-            insert.execute(textPassword.getText().toString());
+            Intent intent = new Intent(this, RouterQueryService.class);
+            //action: edit password
+            intent.putExtra("action", "addVlan");
+            intent.putExtra("ssid","theSSID");
+            intent.putExtra("pw", textPassword.getText());
         }
     }
 
 
-    public class InsertPassword extends AsyncTask<String, Integer, String> {
-
-        protected String doInBackground(String... args) {
-            String newPassword = args[0];
-            String query_url = "http://192.168.1.1/ubus";
-            String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
-            String token = getToken(query_url, json);
-            Log.i("password ", newPassword);
-            insertPassword(token, newPassword);
-            return "";
-        }
-
-        private String insertPassword(String token, String password) {
-            try {
-                String query_url = "http://192.168.1.1/ubus";
-                String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1524, \"method\": \"call\", \"params\": [ \"" + token + "\", \"file\", \"exec\", { \"command\": \"/root/insertScript\",\"params\": [ \"" + password + "\" ] } ] }";
-
-                URL url = new URL(query_url);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(5000);
-                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
-                conn.setRequestMethod("POST");
-
-                OutputStream os = conn.getOutputStream();
-                os.write(json.getBytes(StandardCharsets.UTF_8));
-                os.close();
-
-                // read the response
-                InputStream in = new BufferedInputStream(conn.getInputStream());
-                String result = IOUtils.toString(in, "UTF-8");
-
-
-                System.out.println(result);
-
-                System.out.println("result after Reading JSON Response");
-
-
-                JSONObject myResponse = new JSONObject(result);
-                value = "New Password created as " + password;
-                in.close();
-                conn.disconnect();
-                return myResponse.toString();
-
-
-            } catch (Exception e) {
-                System.out.println(e);
-                value = "Connection error";
-
-                return value;
-            }
-
-        }
-
-
-        public String getToken(String query_url, String json) {
-
-
-            try {
-
-
-                URL url = new URL(query_url);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(5000);
-                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
-                conn.setRequestMethod("POST");
-
-                OutputStream os = conn.getOutputStream();
-                os.write(json.getBytes(StandardCharsets.UTF_8));
-                os.close();
-
-                // read the response
-                InputStream in = new BufferedInputStream(conn.getInputStream());
-                String result = IOUtils.toString(in, "UTF-8");
-
-
-                System.out.println(result);
-
-                System.out.println("result after Reading JSON Response");
-
-
-                JSONObject myResponse = new JSONObject(result);
-
-                in.close();
-                conn.disconnect();
-                JSONArray obj2 = (JSONArray) myResponse.get("result");
-                System.out.println(obj2.get(1).toString());
-                JSONObject obj3 = (JSONObject) obj2.get(1);
-                System.out.println(obj3.get("ubus_rpc_session").toString());
-                return obj3.get("ubus_rpc_session").toString();
-
-            } catch (Exception e) {
-                System.out.println(e);
-                return null;
-            }
-
-        }
-
-        public void onPostExecute(String result) {
-            randomGenerator();
-            Toast toast = Toast.makeText(generatePSK.this, value, Toast.LENGTH_LONG);
-            toast.show();
-        }
-
-    }
 }

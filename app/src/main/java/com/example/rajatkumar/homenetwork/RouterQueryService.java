@@ -25,9 +25,9 @@ import java.util.Arrays;
  */
 public class RouterQueryService extends IntentService {
 
-    /** Router URL */
+    /** URL to send JSON-RPC calls to the Router */
     private static final String UBUS_URL ="http://192.168.1.1/ubus";
-    /** Login params for router -- should be encrypted & in shared pref. */
+    /** Login params for router -- these shouldn't be hard coded. */
     private static final String USRNM_PW = "{ \"username\": \"root\", \"password\": \"openwrt\"  }] }'";
     /** String value of JSON-RPC call to log into router. */
     private static final String GET_SESSION = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", " +
@@ -53,13 +53,13 @@ public class RouterQueryService extends IntentService {
         //executes the matching action
         switch (action){
             case "addVlan" :
-                addVlan(getToken(UBUS_URL));
+                addVlan();
             break;
             case "removeVlan" :
-                removeVlan(getToken(UBUS_URL));
+                removeVlan(intent.getStringExtra("ssid"));
                 break;
             case "getVlans" :
-                getVlans(getToken(UBUS_URL));
+                getVlans();
                 break;
             default :
                 Log.i("RouterQueryService", "Invalid Intent");
@@ -107,10 +107,10 @@ public class RouterQueryService extends IntentService {
      * Method for adding a new vLan to the network, has not been tested
      * currently sets the password is hardcoded, should call to generate random password
      * (In a different class, generatePSK I believe)
-     * @param token - session token from ubus
      * @return response - JSON response from ubus
      */
-    private String addVlan (String token){
+    private String addVlan (){
+        String token = getToken(UBUS_URL);
         try {
             String password = "asfgadfhafasdf";
             // json to send to ubus
@@ -142,12 +142,19 @@ public class RouterQueryService extends IntentService {
         }
     }
 
-    private String removeVlan (String token){
+    /**
+     * Removes a VLAN from the Router Device
+     * @param ssid
+     * @return
+     */
+
+    private String removeVlan (String ssid){
+        String token = getToken(UBUS_URL);
         try {
-            int id = 1;
+
             // json to send to ubus
             String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ " + token +
-                    "\", \"modWifi\", \"rmVlan\", { \"id\" : \"" + id + "\"  } ] }'  http://192.168.1.1/ubus";
+                    "\", \"modWifi\", \"rmVlan\", { \"id\" : \"" + ssid + "\"  } ] }'  http://192.168.1.1/ubus";
             // set up connection
             URL url = new URL(UBUS_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -176,10 +183,10 @@ public class RouterQueryService extends IntentService {
 
     /**
      * This method gets the list of vlans from the router and returns the list as a String
-     * @param token session token
      * @return vlans
      */
-    private String getVlans(String token) {
+    private String getVlans() {
+        String token = getToken(UBUS_URL);
         try {
             //
             String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1000, \"method\": \"call\", \"params\": " +

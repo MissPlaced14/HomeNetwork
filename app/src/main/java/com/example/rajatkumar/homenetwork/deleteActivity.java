@@ -36,14 +36,6 @@ public class deleteActivity extends Activity {
         Log.i("mac", textView.getText().toString());
 
         buttonDelete.setOnClickListener(e->{
-            String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"call\", \"params\": [ \"00000000000000000000000000000000\", \"session\", \"login\", { \"username\": \"root\", \"password\": \"algonquin\"  } ] }";
-            String query_url = "http://192.168.1.1/ubus";
-
-//            token = getToken(query_url, json);
-//            Log.i("token", token);
-//            deletePassword(token, textView.getText().toString());
-//            Log.i("password", textView.getText().toString());
-
             Intent resultIntent = new Intent();
             resultIntent.putExtra("SendingID",b.getString("mac"));
             setResult(600, resultIntent);
@@ -51,42 +43,7 @@ public class deleteActivity extends Activity {
         });
     }
 
-    private  String deletePassword(String token, String mac) {
-        try {
-            String query_url = "http://192.168.1.1/ubus";
-            String json = "{ \"jsonrpc\": \"2.0\", \"id\": 1524, \"method\": \"call\", \"params\": [ \""+token+"\", \"file\", \"exec\", { \"command\": \"deleteScript\",\"params\": [ \""+mac+"\" ] } ] }";
 
-            URL url = new URL(query_url);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(5000);
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setRequestMethod("POST");
-
-            OutputStream os = conn.getOutputStream();
-            os.write(json.getBytes(StandardCharsets.UTF_8));
-            os.close();
-
-            // read the response
-            InputStream in = new BufferedInputStream(conn.getInputStream());
-            String result = IOUtils.toString(in, "UTF-8");
-
-            JSONObject myResponse = new JSONObject(result);
-
-            in.close();
-            conn.disconnect();
-            System.out.println(myResponse.toString());
-            return myResponse.toString();
-
-
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
-
-    }
     public String getToken(String query_url, String json) {
 
 
