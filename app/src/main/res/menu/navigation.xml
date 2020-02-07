@@ -5,14 +5,9 @@
         android:id="@+id/nav_networks"
         android:icon="@drawable/networks"
         android:title="network" />
-
+    
     <item
         android:id="@+id/nav_devices"
-        android:icon="@drawable/devices"
-        android:title="Devices" />
-
-    <item
-        android:id="@+id/nav_users"
         android:icon="@drawable/users"
         android:title="Users" />
 

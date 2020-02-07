@@ -16,43 +16,51 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class devicesFragment extends Fragment {
+/**
+ * This class has methods connected to the fragment_devices.xml layout which is loaded
+ * into the center frame of the app when the devices menu item is selected from the bottom nav bar
+ * It loads a ListView of the SSIDs, provides option to add a new VLAN, or delete an VLAN.
+ */
+public class vlansFragment extends Fragment {
 
-    ListView listViewDevices;
+    ListView vlansLV;
     View page;
     AddressAdaptor addressAdaptor;
-    Button addDeviceButton;
-    ArrayList<String> listDevices;
+    Button addVlanBtn;
+    ArrayList<String> vlansAL;
     Toast rqErrorToast;
+    Intent rqIntent;
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        page = inflater.inflate(R.layout.fragment_devices, container, false);
-        addDeviceButton = page.findViewById(R.id.buttonAddDevice);
-        listViewDevices = page.findViewById(R.id.listViewDevices);
-        listDevices = new ArrayList<>();
+        page = inflater.inflate(R.layout.fragment_devices, container, true);
+        addVlanBtn = page.findViewById(R.id.addVlanBtn);
+        vlansLV = page.findViewById(R.id.listViewDevices);
+        vlansAL = new ArrayList<>();
         rqErrorToast = Toast.makeText(this.getActivity(), "Router Query Error", Toast.LENGTH_LONG);
-        addDeviceButton.setOnClickListener(e-> startActivity(new Intent(getActivity(), generatePSK.class)));
+        rqIntent = new Intent(getActivity(), RouterQueryServiceTest.class);
 
+        addVlanBtn.setOnClickListener(e-> startActivity(new Intent(getActivity(), generatePSK.class)));
         addressAdaptor = new AddressAdaptor(getActivity().getApplicationContext());
         SwipeRefreshLayout pullToRefresh = page.findViewById(R.id.pullToRefreshDevices);
         pullToRefresh.setOnRefreshListener(() -> {
             pullToRefresh.setRefreshing(true);
             if (pullToRefresh.isRefreshing()){
+                rqIntent.putExtra("action", "getVlans");
+                //TODO reload ListView with results
                 pullToRefresh.setRefreshing(false);
             }});
 
-        listViewDevices.setAdapter(addressAdaptor);
+        vlansLV.setAdapter(addressAdaptor);
         addressAdaptor.notifyDataSetChanged();
-        listViewDevices.setOnItemClickListener((adapterView, view, i, l) -> {
+        vlansLV.setOnItemClickListener((adapterView, view, i, l) -> {
             Bundle bundle_message = new Bundle();
-            bundle_message.putString("mac", listViewDevices.getItemAtPosition(i).toString());
+            bundle_message.putString("ssid", vlansLV.getItemAtPosition(i).toString());
             Intent intent = new Intent(getActivity(), deleteActivity.class);
-            intent.putExtra("mac", listViewDevices.getItemAtPosition(i).toString());
+            intent.putExtra("ssid", vlansLV.getItemAtPosition(i).toString());
             startActivityForResult(intent, 500);
         });
         return page;
@@ -60,14 +68,16 @@ public class devicesFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ( resultCode == 600) {
-            Bundle extras = data.getExtras();
-            listDevices.clear();
+//            vlansAL.clear();
             addressAdaptor.notifyDataSetChanged();
         } else {
             rqErrorToast.show();
         }
     }
 
+    /**
+     * Adapter to populate ListView containing the VLANs' SSIDs
+     */
     private class AddressAdaptor extends ArrayAdapter<String> {
 
         AddressAdaptor(Context ctx) {
@@ -75,24 +85,21 @@ public class devicesFragment extends Fragment {
         }
 
         public int getCount(){
-            return listDevices.size();
+            return vlansAL.size();
         }
         public String getItem(int position){
-            return listDevices.get(position);
+            return vlansAL.get(position);
         }
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
             LayoutInflater inflater = getActivity().getLayoutInflater();
             View result = inflater.inflate(R.layout.connected_devices_row, null);
-            TextView address = result.findViewById(R.id.device_mac);
+            TextView address = result.findViewById(R.id.ssid);
             address.setText(   getItem(position)  ); // get the string at position
 
             return result;
         }
 
-        public long getId(int position){
-            return position;
-        }
     }
 
 }

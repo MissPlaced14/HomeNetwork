@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<!--    <uses-sdk android:minSdkVersion="11"/>-->
 
     <application
         android:allowBackup="true"
@@ -24,7 +25,6 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".generatePSK" />
-        <activity android:name=".ShowPasswordActivity" />
         <activity android:name=".deleteActivity" />
         <service
             android:name=".RouterQueryService"
